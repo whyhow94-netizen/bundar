@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matematik Tahun 4: Bundar Nombor Interaktif</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-main: #F4F1FF; 
+            --primary: #8B5CF6; 
+            --secondary: #FF7F50; 
+            --accent-green: #10B981; 
+            --accent-red: #EF4444; 
+            --dark-text: #2E1065; 
+            --white: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--dark-text);
+            line-height: 1.7;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Baloo 2', cursive;
+        }
+
+        /* Banner Pengembaraan */
+        header {
+            background: linear-gradient(135deg, #6D28D9, #9333EA);
+            color: var(--white);
+            padding: 4rem 2rem;
+            text-align: center;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 0px;
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+            line-height: 1.2;
+        }
+
+        header p.subtitle {
+            font-size: 1.4rem;
+            color: #DDD6FE;
+            margin-top: 10px;
+        }
+
+        .author-tag {
+            display: inline-block;
+            margin-top: 2rem;
+            background: var(--secondary);
+            color: var(--white);
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 10px rgba(255, 127, 80, 0.4);
+        }
+
+        /* Kontena Utama */
+        .container {
+            max-width: 900px;
+            margin: -2rem auto 3rem;
+            padding: 0 1.5rem;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 25px;
+            padding: 3rem 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+            border: 3px solid #EDE9FE;
+        }
+
+        .card-title {
+            color: var(--primary);
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        /* GAYA KOTAK SIMULASI INTERAKTIF */
+        .simulator-box {
+            background: #F8FAFC;
+            border: 3px dashed #C4B5FD;
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .input-group input, .input-group select {
+            padding: 0.8rem 1rem;
+            font-size: 1.1rem;
+            border: 2px solid #CBD5E1;
+            border-radius: 12px;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-kira {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'Baloo 2', cursive;
+        }
+
+        .btn-kira:hover {
+            background: #7C3AED;
+            transform: scale(1.05);
+        }
+
+        /* Paparan Bukit Visual Pantas */
+        .hill-display {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: #FFF;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .hill-side {
+            padding: 1rem;
+            border-radius: 12px;
+            width: 45%;
+            font-weight: bold;
+        }
+
+        .side-miskin { background: #FEF2F2; color: var(--accent-red); border: 2px solid #FCA5A5; }
+        .side-kaya { background: #ECFDF5; color: var(--accent-green); border: 2px solid #6EE7B7; }
+
+        /* Jalan Kerja Dinamik */
+        .result-box {
+            background: #EDF2F7;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 1.5rem;
+            display: none; /* muncul selepas klik button */
+        }
+
+        .digit-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 10px;
+            margin: 1rem 0;
+            font-family: monospace;
+        }
+
+        .highlight-tuan { color: var(--primary); text-decoration: underline; }
+        .highlight-jiran { color: #F59E0B; border: 2px dashed #F59E0B; padding: 0 5px; border-radius: 50%; }
+
+        /* Gaya Langkah Demi Langkah */
+        .step-box {
+            display: flex;
+            margin-bottom: 1.5rem;
+            background: #F8FAFC;
+            border-radius: 20px;
+            padding: 1.5rem;
+            border-left: 8px solid var(--secondary);
+        }
+
+        .step-number {
+            background: var(--secondary);
+            color: white;
+            min-width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-family: 'Baloo 2', cursive;
+            margin-right: 1.5rem;
+        }
+
+        .step-content h3 { color: var(--primary); font-size: 1.4rem; }
+
+        .magic-tip {
+            background: linear-gradient(to right, #FFFBEB, #FEF3C7);
+            border: 2px solid #FCD34D;
+            border-radius: 15px;
+            padding: 1.5rem;
+            font-size: 1.1rem;
+            margin-top: 2rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #6B7280;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 2.5rem; }
+            .input-group { flex-direction: column; }
+            .hill-display { flex-direction: column; gap: 10px; }
+            .hill-side { width: 100%; }
+            .step-box { flex-direction: column; text-align: center; }
+            .step-number { margin: 0 auto 1rem auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Pengembaraan Bundar Nombor</h1>
+        <p class="subtitle">Matematik Tahun 4 : Nombor & Operasi</p>
+        <div class="author-tag">Cikgu Muhammad Faizul Rizwan bin Ghazali (P171068)</div>
+    </header>
+
+    <div class="container">
+        
+        <section class="card">
+            <h2 class="card-title">Mesin Pembundar Interaktif ⛰️</h2>
+            <p style="font-size: 1.2rem; text-align: center; margin-bottom: 1.5rem;">
+                Mari kita uji mana-mana nombor! Masukkan nombor pilihan anda di bawah, pilih nilai tempat, dan saksikan bagaimana jiran nombor membantu memberikan jawapan.
+            </p>
+
+            <div class="simulator-box">
+                <div class="input-group">
+                    <input type="number" id="nomborInput" value="34562" placeholder="Contoh: 34562" max="99999" min="0">
+                    <select id="nilaiTempat">
+                        <option value="10">Puluh Terhampir</option>
+                        <option value="100">Ratus Terhampir</option>
+                        <option value="1000" selected>Ribu Terhampir</option>
+                        <option value="10000">Puluh Ribu Terhampir</option>
+                    </select>
+                    <button class="btn-kira" onclick="jalankanBundar()">Bundarkan Sekarang! 🚀</button>
+                </div>
+
+                <div class="hill-display">
+                    <div class="hill-side side-miskin">
+                        <p>🔴 Kumpulan +0 (Turun Bukit)</p>
+                        <p style="font-size: 0.9rem; font-weight: normal; margin-top: 5px;">Jiran Kanan: 0, 1, 2, 3, 4</p>
+                    </div>
+                    <div class="hill-side side-kaya">
+                        <p>🟢 Kumpulan +1 (Naik Bukit)</p>
+                        <p style="font-size: 0.9rem; font-weight: normal; margin-top: 5px;">Jiran Kanan: 5, 6, 7, 8, 9</p>
+                    </div>
+                </div>
+
+                <div id="kawasanJawapan" class="result-box">
+                    <h3 style="text-align: center; color: var(--dark-text);">Analisis Jalan Kerja:</h3>
+                    <div id="visualDigit" class="digit-display"></div>
+                    <div id="peneranganLangkah"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">4 Langkah Utama Mengingat</h2>
+            <div class="step-box">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Gariskan Tuan Rumah</h3>
+                    <p>Kenal pasti nilai tempat yang diminta oleh soalan (contoh: Puluh, Ratus, atau Ribu) kemudian gariskan digit tersebut.</p>
+                </div>
+            </div>
+            <div class="step-box">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Bulatkan Jiran Kanan</h3>
+                    <p>Lihat tepat pada nombor di sebelah kanan nilai tempat tersebut. Bulatkannya untuk rujukan.</p>
+                </div>
+            </div>
+            <div class="step-box">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Tanya Kumpulan Bukit</h3>
+                    <p>Jika jiran tersebut bernombor 0-4, tambah 0 pada Tuan Rumah. Jika jiran bernombor 5-9, dermakan +1 kepada Tuan Rumah.</p>
+                </div>
+            </div>
+            <div class="step-box">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Sifarkan Bahagian Kanan</h3>
+                    <p>Tulis jawapan akhir di mana semua nombor di sebelah kanan bertukar menjadi 'telur' atau sifar (0).</p>
+                </div>
+            </div>
+
+            <div class="magic-tip">
+                💡 <strong>Formula Mudah Ingat Cikgu Faizul:</strong><br>
+                <em>"Kiri biar je (kekal), Kanan semua telur (kosong), Tuan Rumah ikut kata Jiran."</em>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>Hak Cipta Terpelihara &copy; 2026 | Modul Ceria Matematik Tahun 4</p>
+        <p>Inspirasi Pendidikan oleh <strong>Muhammad Faizul Rizwan bin Ghazali (P171068)</strong></p>
+    </footer>
+
+    <script>
+        function jalankanBundar() {
+            const nomborStr = document.getElementById('nomborInput').value.trim();
+            const nilai = parseInt(document.getElementById('nilaiTempat').value);
+            
+            if (!nomborStr || isNaN(nomborStr)) {
+                alert('Sila masukkan nombor yang sah dahulu bosku!');
+                return;
+            }
+
+            const nombor = parseInt(nomborStr);
+            // Cari jawapan bundar rasmi matematik
+            const jawapanBundar = Math.round(nombor / nilai) * nilai;
+
+            // Logik mendapatkan posisi indeks nilai tempat untuk paparan visual
+            let panjang = nomborStr.length;
+            let posisiTuan = -1;
+            
+            if (nilai === 10) posisiTuan = panjang - 2;
+            else if (nilai === 100) posisiTuan = panjang - 3;
+            else if (nilai === 1000) posisiTuan = panjang - 4;
+            else if (nilai === 10000) posisiTuan = panjang - 5;
+
+            let visualHtml = "";
+            let jiranDigit = "0";
+            
+            for(let i=0; i<panjang; i++) {
+                if (i === posisiTuan) {
+                    visualHtml += `<span class="highlight-tuan">${nomborStr[i]}</span>`;
+                } else if (i === posisiTuan + 1) {
+                    visualHtml += `<span class="highlight-jiran">${nomborStr[i]}</span>`;
+                    jiranDigit = nomborStr[i];
+                } else {
+                    visualHtml += nomborStr[i];
+                }
+            }
+
+            // Tentukan kumpulan jiran
+            let kumpulanText = "";
+            let operasiText = "";
+            const jiranNilai = parseInt(jiranDigit);
+            
+            if (jiranNilai >= 5) {
+                kumpulanText = `<strong style="color:var(--accent-green)">Kumpulan Kaya (+1)</strong>. Kereta berjaya lepas puncak bukit!`;
+                operasiText = `Oleh itu, Tuan Rumah mendapat derma +1.`;
+            } else {
+                kumpulanText = `<strong style="color:var(--accent-red)">Kumpulan Miskin (+0)</strong>. Kereta tidak lepas mendaki dan undur balik.`;
+                operasiText = `Oleh itu, Tuan Rumah kekal (tambah 0).`;
+            }
+
+            // Bina teks penerangan dinamik
+            let peneranganHtml = `
+                <p style="margin-top:10px; font-size:1.1rem;">1. Digit <span style="color:var(--primary); font-weight:bold; text-decoration:underline;">Bergaris</span> adalah Tuan Rumah bagi nilai tempat yang dipilih.</p>
+                <p style="margin-top:5px; font-size:1.1rem;">2. Digit di dalam <span style="color:#F59E0B; font-weight:bold;">Bulatan</span> ialah Jiran Kanan iaitu angka <strong>${jiranDigit}</strong>.</p>
+                <p style="margin-top:5px; font-size:1.1rem;">3. Angka ${jiranDigit} tergolong dalam ${kumpulanText} ${operasiText}</p>
+                <p style="margin-top:15px; font-size:1.3rem; text-align:center; font-weight:bold; color:var(--accent-green);">
+                    🎉 Hasil Bundar: <span style="background:#FFF; padding:5px 15px; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1);">${jawapanBundar.toLocaleString()}</span>
+                </p>
+            `;
+
+            // Paparkan ruangan jawapan kepada murid
+            document.getElementById('visualDigit').innerHTML = visualHtml;
+            document.getElementById('peneranganLangkah').innerHTML = peneranganHtml;
+            document.getElementById('kawasanJawapan').style.display = "block";
+        }
+    </script>
+</body>
+</html>
